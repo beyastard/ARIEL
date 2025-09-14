@@ -12,11 +12,7 @@
 // print message and exit
 void invalid_parameter(const char* c)
 {
-#ifdef _MSC_VER
-    printf_s("Invalid parameter in %s call\n", c);
-#else
-    printf("Invalid parameter in %s call\n", c);
-#endif
+    xprintf("Invalid parameter in %s call\n", c);
     terminate();
 }
 

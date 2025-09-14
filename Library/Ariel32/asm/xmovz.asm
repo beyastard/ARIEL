@@ -13,9 +13,9 @@ section .text align=8
 ; Registers:   EAX = a->limbs, ECX = da
 ; Clobbers:    EAX, ECX
 ;
-global _xmovz
+global __xmovz
 align 8
-_xmovz:
+__xmovz:
     push    ebp
     mov     ebp, esp
 

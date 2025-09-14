@@ -22,11 +22,7 @@ void _ualloc(arz_t* a, int32_t c, int32_t d)
         _xmovz(a->limbs, a->used_limbs);
     else
     {
-#ifdef _MSC_VER
-        printf_s("Unable to allocate %d digits in function _ualloc!\n", a->alloc_limbs);
-#else
-        printf("Unable to allocate %d digits in function _ualloc!\n", a->alloc_limbs);
-#endif
+        xprintf("Unable to allocate %d digits in function _ualloc!\n", a->alloc_limbs);
         terminate();
     }
 }
@@ -61,11 +57,24 @@ void _uextend(arz_t* a, int32_t d)
     }
     else
     {
-#ifdef _MSC_VER
-        printf_s("Unable to allocate %d extra digits in _uextend!\n", d - a->alloc_limbs);
-#else
-        printf("Unable to allocate %d extra digits in _uextend!\n", d - a->alloc_limbs);
-#endif
+        xprintf("Unable to allocate %d extra digits in _uextend!\n", d - a->alloc_limbs);
         terminate();
     }
+}
+
+// formatted print
+int xprintf(const char* s, ...)
+{
+    int retval;
+    va_list arglist;
+
+    va_start(arglist, s);
+#ifdef _MSC_VER
+    retval = vprintf_s(s, arglist);
+#else
+    retval = vprintf(s, arglist);
+#endif
+    va_end(arglist);
+
+    return retval;
 }

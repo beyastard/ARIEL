@@ -14,9 +14,9 @@ section .text align=8
 ; Assumptions: d(a) = d(b) > 0
 ; Clobbers: EAX, ECX, EDX
 ;
-global _xmovf
+global __xmovf
 align 16
-_xmovf:
+__xmovf:
     push    ebp
     mov     ebp, esp
 

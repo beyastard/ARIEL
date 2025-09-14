@@ -9,6 +9,7 @@
 
 #include <conio.h>
 #include <ctype.h>
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -35,6 +36,9 @@ typedef struct ariel_integer_s
 void _ualloc(arz_t* a, int32_t c, int32_t d);
 void _ufree(arz_t* a);
 void _uextend(arz_t* a, int32_t d);
+
+// formatted print
+int xprintf(const char* s, ...);
 
 
 // terminate program
