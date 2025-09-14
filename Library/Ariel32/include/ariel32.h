@@ -10,6 +10,8 @@
 #include "ariel32_base.h"
 
 
+void invalid_parameter(const char* c);
+
 void arz_mov(arz_t* a, arz_t* b);
 void arz_movk(arz_t* a, int32_t k);
 
