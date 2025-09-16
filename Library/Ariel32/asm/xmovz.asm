@@ -9,9 +9,8 @@ default rel
 
 section .text align=8
 
+
 ; void _xmovz(limb_t* a, int32_t da); // a = 0
-; Registers:   EAX = a->limbs, ECX = da
-; Clobbers:    EAX, ECX
 ;
 global __xmovz
 align 8

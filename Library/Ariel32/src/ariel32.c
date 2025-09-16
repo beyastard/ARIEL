@@ -60,3 +60,174 @@ void arz_movk(arz_t* a, int32_t k)
 
     a->used_limbs = 1;
 }
+
+// a = a + b
+void arz_add(arz_t* a, arz_t* b)
+{
+    int32_t f;
+
+    if (a->limbs == NULL)
+        invalid_parameter("arz_add");
+
+    if (b->limbs == NULL)
+        invalid_parameter("arz_add");
+
+    if (a->used_limbs < 1)
+        invalid_parameter("arz_add");
+
+    if (b->used_limbs < 1)
+        invalid_parameter("arz_add");
+
+    assert(a->limbs != NULL);
+
+    // Extend a if shorter than b
+    if (a->used_limbs < b->used_limbs)
+    {
+        if (a->alloc_limbs < b->used_limbs)
+            _uextend(a, b->used_limbs);
+
+        _xmovz(&a->limbs[a->used_limbs], b->used_limbs - a->used_limbs);
+        a->used_limbs = b->used_limbs;
+    }
+
+    if ((a->flags & NegativeReg) == (b->flags & NegativeReg))
+    {
+        // Same signs
+        f = _xadd(a->limbs, b->limbs, a->used_limbs, b->used_limbs);
+        if (f & CarryFlag)
+        {
+            if (a->alloc_limbs <= a->used_limbs)
+                _uextend(a, a->used_limbs + 1);
+
+            a->limbs[a->used_limbs] = 1;
+            a->used_limbs++;
+        }
+    }
+    else
+    {
+        // Different signs
+        f = _xsub(a->limbs, b->limbs, a->used_limbs, b->used_limbs);
+        if (f & CarryFlag)
+        {
+            _xneg(a->limbs, a->used_limbs);
+            a->flags ^= NegativeReg;
+        }
+    }
+}
+
+// a = a + k, -2^31 < k < 2^31
+void arz_addk(arz_t* a, int32_t k)
+{
+    int32_t f;
+
+    if (a->limbs == NULL)
+        invalid_parameter("arz_addk");
+
+    if (a->used_limbs < 1)
+        invalid_parameter("arz_addk");
+
+    assert(a->limbs != NULL);
+
+    if (k >= 0)
+    {
+        if (!(a->flags & NegativeReg))
+        {
+            f = _xaddk(a->limbs, k, a->used_limbs);
+            if (f & CarryFlag)
+            {
+                if (a->alloc_limbs <= a->used_limbs)
+                    _uextend(a, a->used_limbs + 1);
+
+                a->limbs[a->used_limbs] = 1;
+                a->used_limbs++;
+            }
+        }
+        else
+        {
+            f = _xsubk(a->limbs, k, a->used_limbs);
+            if (f & CarryFlag)
+            {
+                _xneg(a->limbs, a->used_limbs);
+                a->flags ^= NegativeReg;
+            }
+        }
+    }
+    else // k < 0
+    {
+        if (!(a->flags & NegativeReg))
+        {
+            f = _xsubk(a->limbs, -k, a->used_limbs);
+            if (f & CarryFlag)
+            {
+                _xneg(a->limbs, a->used_limbs);
+                a->flags ^= NegativeReg;
+            }
+        }
+        else
+        {
+            f = _xaddk(a->limbs, -k, a->used_limbs);
+            if (f & CarryFlag)
+            {
+                if (a->alloc_limbs <= a->used_limbs)
+                    _uextend(a, a->used_limbs + 1);
+
+                a->limbs[a->used_limbs] = 1;
+                a->used_limbs++;
+            }
+        }
+    }
+}
+
+// a = a - b
+void arz_sub(arz_t* a, arz_t* b)
+{
+    int32_t f;
+
+    if (a->limbs == NULL)
+        invalid_parameter("arz_sub");
+
+    if (b->limbs == NULL)
+        invalid_parameter("arz_sub");
+
+    if (a->used_limbs < 1)
+        invalid_parameter("arz_sub");
+
+    if (b->used_limbs < 1)
+        invalid_parameter("arz_sub");
+
+    assert(a->limbs != NULL);
+
+    // Extend a if shorter than b
+    if (a->used_limbs < b->used_limbs)
+    {
+        if (a->alloc_limbs < b->used_limbs)
+            _uextend(a, b->used_limbs);
+
+        _xmovz(&a->limbs[a->used_limbs], b->used_limbs - a->used_limbs);
+        a->used_limbs = b->used_limbs;
+    }
+
+    if ((a->flags & NegativeReg) != (b->flags & NegativeReg))
+    {
+        // Different signs
+        f = _xadd(a->limbs, b->limbs, a->used_limbs, b->used_limbs);
+        if (f & CarryFlag)
+        {
+            if (a->alloc_limbs <= a->used_limbs)
+                _uextend(a, a->used_limbs + 1);
+
+            a->limbs[a->used_limbs] = 1;
+            a->used_limbs++;
+        }
+    }
+    else
+    {
+        // Same signs
+        f = _xsub(a->limbs, b->limbs, a->used_limbs, b->used_limbs);
+        if (f & CarryFlag)
+        {
+            _xneg(a->limbs, a->used_limbs);
+            a->flags ^= NegativeReg;
+        }
+    }
+}

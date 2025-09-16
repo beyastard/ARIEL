@@ -7,28 +7,36 @@
 bits 32
 default rel
 
+
 section .text align=8
 
 
-; void _xmovf(limb_t* a, limb_t* b, int32_t db);
+; void _xsubf(limb_t* a, limb_t* b, int32_t da); // a = a - b (mod 2^(32*d(a)))
 ; Assumptions: d(a) = d(b) > 0
 ;
-global __xmovf
+global __xsubf
 align 8
-__xmovf:
+__xsubf:
     push    ebp
     mov     ebp, esp
+    push    ebx
 
     mov     eax, [ebp+8]            ; EAX = a->limbs
     mov     edx, [ebp+12]           ; EDX = b->limbs
+    
+    clc                             ; clear carry
 
 .loop:
-    mov     ecx, [edx]              ; ECX = b_i
-    mov     [eax], ecx              ; a_i = b_i
-    add     edx, 4
-    add     eax, 4
-    dec     dword [ebp+16]          ; db--
-    jg      .loop
+    mov     ebx, [edx]              ; EBX = b_i
+    mov     ecx, [eax]              ; ECX = a_i
 
+    add     edx, 4
+    sbb     ecx, ebx                ; ECX = a_i - b_i - borrow
+    dec     dword [ebp+16]          ; db--
+    mov     [eax], ecx              ; move into a->limbs
+    add     eax, 4
+    jg      .loop                   ; more digirs?
+    
+    pop     ebx
     leave
     ret

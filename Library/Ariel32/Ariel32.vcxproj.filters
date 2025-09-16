@@ -40,5 +40,35 @@
     <NASM Include="asm\xmovz.asm">
       <Filter>Assembly Files</Filter>
     </NASM>
+    <NASM Include="asm\globals.inc">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xaddf.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xmov.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xmovk.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xaddk.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xadd.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xsubf.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xsubk.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xsub.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xneg.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
   </ItemGroup>
 </Project>

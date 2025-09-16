@@ -62,6 +62,22 @@ void _uextend(arz_t* a, int32_t d)
     }
 }
 
+int xfprintf(FILE* fp, const char* s, ...)
+{
+    int retval;
+    va_list arglist;
+
+    va_start(arglist, s);
+#ifdef _MSC_VER
+    retval = vfprintf_s(fp, s, arglist);
+#else
+    retval = vfprintf(fp, s, arglist);
+#endif
+    va_end(arglist);
+
+    return retval;
+}
+
 // formatted print
 int xprintf(const char* s, ...)
 {

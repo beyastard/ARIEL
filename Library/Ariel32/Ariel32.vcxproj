@@ -154,8 +154,38 @@
     <ClInclude Include="include\ariel32_base.h" />
   </ItemGroup>
   <ItemGroup>
+    <NASM Include="asm\globals.inc" />
+    <NASM Include="asm\xadd.asm">
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./asm;%(IncludePaths)</IncludePaths>
+    </NASM>
+    <NASM Include="asm\xaddf.asm" />
+    <NASM Include="asm\xaddk.asm" />
+    <NASM Include="asm\xmov.asm">
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./asm;%(IncludePaths)</IncludePaths>
+    </NASM>
     <NASM Include="asm\xmovf.asm" />
+    <NASM Include="asm\xmovk.asm">
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./asm;%(IncludePaths)</IncludePaths>
+    </NASM>
     <NASM Include="asm\xmovz.asm" />
+    <NASM Include="asm\xneg.asm" />
+    <NASM Include="asm\xsub.asm">
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./asm;%(IncludePaths)</IncludePaths>
+    </NASM>
+    <NASM Include="asm\xsubf.asm" />
+    <NASM Include="asm\xsubk.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -10,25 +10,30 @@ default rel
 section .text align=8
 
 
-; void _xmovf(limb_t* a, limb_t* b, int32_t db);
+; void _xaddf(limb_t* a, limb_t* b, int32_t db); // a = a + b (mod 2^(32*d(a)))
 ; Assumptions: d(a) = d(b) > 0
 ;
-global __xmovf
+global __xaddf
 align 8
-__xmovf:
+__xaddf:
     push    ebp
     mov     ebp, esp
+    push    ebx
 
     mov     eax, [ebp+8]            ; EAX = a->limbs
     mov     edx, [ebp+12]           ; EDX = b->limbs
+    clc                             ; clear carry
 
 .loop:
-    mov     ecx, [edx]              ; ECX = b_i
-    mov     [eax], ecx              ; a_i = b_i
+    mov     ebx, [edx]              ; EBX = b_i
+    mov     ecx, [eax]              ; ECX = a_i
     add     edx, 4
-    add     eax, 4
+    adc     ecx, ebx                ; ECX = a_i + b_i + carry
     dec     dword [ebp+16]          ; db--
-    jg      .loop
+    mov     [eax], ecx              ; move into a->limbs
+    add     eax, 4
+    jg      .loop                   ; more digits?
 
+    pop     ebx
     leave
     ret
