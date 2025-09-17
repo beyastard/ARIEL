@@ -82,6 +82,14 @@ extern int32_t _xsubk(limb_t* a, int32_t k, int32_t da);
 
 extern void _xneg(limb_t* a, int32_t da);
 
+extern int32_t _xdigits(int32_t da, limb_t* a);
+extern int32_t _xsig(limb_t* a, int32_t da);
+
+extern void _xmul(limb_t* a, limb_t* b, int32_t da, int32_t db);
+extern void _xmulk(limb_t* a, int32_t k, int32_t da);
+
+extern int32_t _xdivk(limb_t* a, int32_t k, int32_t da);
+
 
 // The macro-level '_u*' functions are completely unchecked and have no error-checking as they
 // are intended for internal use. Thet are similar to the main 'arz_*' functions minus the error
@@ -118,6 +126,21 @@ extern void _xneg(limb_t* a, int32_t da);
 
 // a = a - k (mod 2^(32*d(a))),  returns CarryFlag and SignBit  [k >= 0, d(a) >= d(b) > 0]
 #define _usubk(areg,knum) _xsubk(areg->limbs, knum, areg->used_limbs)
+
+// a = a * b  [d(a), d(b) > 0, c(a) >= d(a) + d(b)]
+#define _umul(areg,breg) _xmul(areg->limbs, breg->limbs, areg->used_limbs, breg->used_limbs); areg->used_limbs = areg->used_limbs + breg->used_limbs
+
+// a = a * k  [d(a) > 0, c(a) > d(a)]
+#define _umulk(areg,knum) _xmulk(areg->limbs, knum, areg->used_limbs); areg->used_limbs++
+
+// a = [a / k], returns (a mod k)  [k > 0, d(a) > 0]
+#define _udivk(areg,knum) _xdivk(areg->limbs, knum, areg->used_limbs)
+
+// Remove non-significant digits from an integer register
+#define _utrim(areg)  areg->used_limbs = _xdigits(areg->used_limbs, areg->limbs)
+
+// high order digit of a  [d(a) > 0]
+#define _usig(areg) _xsig(areg->limbs, areg->used_limbs)
 
 
 #endif

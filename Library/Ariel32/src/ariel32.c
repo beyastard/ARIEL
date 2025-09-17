@@ -9,11 +9,87 @@
 #include <assert.h>
 
 
+// remainder register
+extern arz_t rres = { NULL, 0, 0, 0 };
+extern arz_t* res = &rres;
+
+
 // print message and exit
 void invalid_parameter(const char* c)
 {
     xprintf("Invalid parameter in %s call\n", c);
     terminate();
+}
+
+// Display an integer register in decimal format in output to file
+// If fp=NULL then print to stdout.
+void arz_fdisplay(FILE* fp, arz_t* a)
+{
+    if (a->limbs == NULL)
+        invalid_parameter("arz_display");
+
+    if (a->used_limbs < 1)
+        invalid_parameter("arz_display");
+
+    // Decimal occupies at least log(2^32)/log(10^9) times as much space.
+    int32_t ddigits = ((9 * a->used_limbs) >> 3) + 4;
+    if (res->limbs == NULL)
+        _ualloc(res, ddigits, 1);
+
+    if (res->alloc_limbs < ddigits)
+        _uextend(res, ddigits);
+
+    assert(res->limbs != NULL);
+
+    // Repeatedly divide by 10^9, saving remainder starting at ddigits - 1
+    _umov(res, a);
+    res->used_limbs = a->used_limbs;
+    int32_t decimal = ddigits;
+
+    while (_xsig(res->limbs, res->used_limbs))
+    {
+        decimal--;
+        res->limbs[decimal] = _xdivk(res->limbs, 1000000000, res->used_limbs);
+        _utrim(res);
+    }
+
+    // Print the remainders
+    if (arz_sgn(a) < 0)
+    {
+        if (fp)
+            fprintf(fp, "-");
+        else
+            printf("-");
+    }
+
+    int32_t significant = 0;
+    for (int32_t i = decimal; i < ddigits; i++)
+    {
+        if (res->limbs[i] && !significant)
+        {
+            if (fp)
+                fprintf(fp, "%d", res->limbs[i]);
+            else
+                printf("%d", res->limbs[i]);
+
+            significant = 1;
+        }
+        else
+        {
+            if (fp)
+                fprintf(fp, "%09d", res->limbs[i]);
+            else
+                printf("%09d", res->limbs[i]);
+        }
+    }
+
+    if (!significant)
+    {
+        if (fp)
+            fprintf(fp, "0");
+        else
+            printf("0");
+    }
 }
 
 // a = b
@@ -230,4 +306,76 @@ void arz_sub(arz_t* a, arz_t* b)
             a->flags ^= NegativeReg;
         }
     }
+}
+
+// arz_sgn(a) = -1 if a < 0, 0 if a = 0, 1 if a > 0
+int32_t arz_sgn(arz_t* a)
+{
+    if (a->limbs == NULL)
+        invalid_parameter("arz_sgn");
+
+    if (a->used_limbs < 1)
+        invalid_parameter("arz_sgn");
+
+    if (!_xsig(a->limbs, a->used_limbs))
+        return 0;
+
+    if (a->flags & NegativeReg)
+        return -1;
+
+    return 1;
+}
+
+// a = a * b
+void arz_mul(arz_t* a, arz_t* b)
+{
+    if (a->limbs == NULL)
+        invalid_parameter("arz_mul");
+
+    if (b->limbs == NULL)
+        invalid_parameter("arz_mul");
+
+    if (a->used_limbs < 1)
+        invalid_parameter("arz_mul");
+
+    if (b->used_limbs < 1)
+        invalid_parameter("arz_mul");
+
+    _utrim(a);
+    _utrim(b);
+
+    int32_t da2 = (a->used_limbs + a->used_limbs);
+    int32_t db2 = (b->used_limbs + b->used_limbs);
+    int32_t dab = a->used_limbs + b->used_limbs;
+
+    if (a->alloc_limbs < dab)
+            _uextend(a, dab);
+    
+    _xmul(a->limbs, b->limbs, a->used_limbs, b->used_limbs);
+    
+}
+
+// a = a * k
+void arz_mulk(arz_t* a, int32_t k)
+{
+    if (a->limbs == NULL)
+        invalid_parameter("arz_mulk");
+
+    if (a->used_limbs < 1)
+        invalid_parameter("arz_mulk");
+
+    _utrim(a);
+
+    if (a->alloc_limbs <= a->used_limbs)
+        _uextend(a, a->used_limbs + 1);
+
+    if (k < 0)
+    {
+        _xmulk(a->limbs, -k, a->used_limbs);
+        a->flags ^= NegativeReg;
+    }
+    else
+        _xmulk(a->limbs, k, a->used_limbs);
+
+    a->used_limbs++;
 }

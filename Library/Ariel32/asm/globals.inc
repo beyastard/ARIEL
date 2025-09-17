@@ -10,7 +10,13 @@
 section .data   align=16
 
 
-Zsg         dd      0               ; Sign indicator
+Zsg         dd      0               ; sign indicator
+Zcarry      dd      0               ; carry indicator
+
+Zmula0      dd      0               ; save &a->limbs
+Zmulb0      dd      0               ; save &b->limbs
+Zmulda      dd      0               ; save d(a)
+Zmuldb      dd      0               ; save d(b)
 
 
 %endif

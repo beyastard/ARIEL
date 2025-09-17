@@ -10,7 +10,12 @@
 #include "ariel32_base.h"
 
 
+extern arz_t* res;
+
+
 void invalid_parameter(const char* c);
+void arz_fdisplay(FILE* fp, arz_t* a);
+#define arz_display(areg) arz_fdisplay(NULL, areg)
 
 void arz_mov(arz_t* a, arz_t* b);
 void arz_movk(arz_t* a, int32_t k);
@@ -19,6 +24,11 @@ void arz_add(arz_t* a, arz_t* b);
 void arz_addk(arz_t* a, int32_t k);
 
 void arz_sub(arz_t* a, arz_t* b);
+
+int32_t arz_sgn(arz_t* a);
+
+void arz_mul(arz_t* a, arz_t* b);
+void arz_mulk(arz_t* a, int32_t k);
 
 
 // maco-level functions

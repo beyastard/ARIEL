@@ -39,7 +39,7 @@ __xaddk:
     mov     [edi+4], eax            ; move into a->limbs
     jnc     .done
     dec     ecx
-    add     edi, 4
+    lea     edi, [edi+4]
     jg      .loop                   ; more
 
 .done:

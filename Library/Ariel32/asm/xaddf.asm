@@ -19,21 +19,25 @@ __xaddf:
     push    ebp
     mov     ebp, esp
     push    ebx
+    push    edi
 
     mov     eax, [ebp+8]            ; EAX = a->limbs
     mov     edx, [ebp+12]           ; EDX = b->limbs
+    mov     ebx, [ebp+16]           ; EBX = db
+
     clc                             ; clear carry
 
 .loop:
-    mov     ebx, [edx]              ; EBX = b_i
+    mov     edi, [edx]              ; EDI = b_i
     mov     ecx, [eax]              ; ECX = a_i
-    add     edx, 4
-    adc     ecx, ebx                ; ECX = a_i + b_i + carry
-    dec     dword [ebp+16]          ; db--
+    lea     edx, [edx+4]
+    adc     ecx, edi                ; ECX = a_i + b_i + carry
+    dec     ebx
     mov     [eax], ecx              ; move into a->limbs
-    add     eax, 4
+    lea     eax, [eax+4]
     jg      .loop                   ; more digits?
 
+    pop     edi
     pop     ebx
     leave
     ret

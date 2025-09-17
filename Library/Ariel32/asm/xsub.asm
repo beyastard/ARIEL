@@ -21,46 +21,51 @@ section .text align=8
 global __xsub
 align 8
 __xsub:
+     mov     dword [Zsg], 0
+
     push    ebp
     mov     ebp, esp
-    push    edi
     push    ebx
+    push    esi
+    push    edi
 
     mov     edi, [ebp+8]            ; EDI = a->limbs
     mov     edx, [ebp+12]           ; EDX = b->limbs
-    mov     ecx, [ebp+16]           ; ECX = da
-    mov     dword [Zsg], 0
-
-    sub     ecx, [ebp+20]           ; ECX = d(a) - d(b)
+    mov     ebx, [ebp+16]           ; EBX = da
+    mov     ecx, [ebp+20]           ; ECX = db
+    
+    mov     edi, eax                ; EDI = &a
+    sub     ebx, ecx                ; EBX = d(a) - d(b)
     clc                             ; clear carry
 
 .loop_d:
-    mov     ebx, [edx]              ; EBX = b_i
+    mov     esi, [edx]              ; ESI = b_i
     mov     eax, [edi]              ; EAX = a_i
-    add     edx, 4
-    sbb     eax, ebx                ; EAX = a_i - b_i - borrow
-    dec     dword [ebp+20]          ; db--
-    mov     [edi], eax              ; move into a->limbs
-    add     edi, 4
-    jg      .loop_d                  ; more digits?
+    lea     edx, [edx+4]
+    sbb     eax, esi                ; EAX = a_i - b_i - borrow
+    dec     ecx
+    mov     [edi], eax              ; move to a->limbs
+    lea     edi, [edi+4]
+    jg      .loop_d                 ; more digits?
     lahf                            ; carry flag into AH
-    cmp     ecx, 0
+    cmp     ebx, 0
     jbe     .done                  ; d(a) = d(b)
-    sar     ebx, 31
-    and     ebx, [Zsg]              ; EBX = sign bits of b
+    sar     esi, 31
+    and     esi, [Zsg]              ; ESI = sign bits of b
     sahf                            ; restore carry
 
 .loop_s:
     mov     eax, [edi]              ; EAX = a_i
-    sbb     eax, ebx                ; EAX = a_i - sign bits of b - borrow
-    dec     ecx                     ; da--
+    sbb     eax, esi                ; EAX = a_i - sign bits of b - borrow
+    dec     ebx
     mov     [edi], eax              ; move into a->limbs
-    add     edi, 4
-    jg      .loop_s                  ; more sign bits?
+    lea     edi, [edi+4]
+    jg      .loop_s                 ; more sign bits?
     lahf                            ; carry flag into AH
 
 .done:
-    pop     ebx
     pop     edi
+    pop     esi
+    pop     ebx
     leave
     ret

@@ -7,7 +7,6 @@
 bits 32
 default rel
 
-
 section .text align=8
 
 
@@ -21,27 +20,31 @@ align 8
 __xsubk:
     push    ebp
     mov     ebp, esp
+    push    ebx
 
     mov     eax, [ebp+8]            ; EAX = a->limbs
     mov     edx, [ebp+12]           ; EDX = k
+    mov     ebx, [ebp+16]           ; EBX = da
 
-    mov     ecx, [eax]              ; ECX = a_0
-    sub     ecx, edx                ; ECX = a_0 - k
-    mov     [eax], ecx              ; move into a->limbs
+    mov     edi, eax                ; EDI = a->limbs
+    mov     eax, [edi]              ; EAX = a_0
+    sub     eax, edx                ; ECX = a_0 - k
+    mov     [edi], eax              ; move into a->limbs
     jnc     .done
-    dec     dword [ebp+16]          ; da--
+    dec     ebx
     jz      .done                   ; only one digit
 
 .loop:
-    mov     ecx, [eax+4]            ; ECX = a_i
-    sub     ecx, 1
-    mov     [eax+4], ecx            ; move into a->limbs
+    mov     eax, [edi+4]            ; ECX = a_i
+    sub     eax, 1
+    mov     [edi+4], eax            ; move into a->limbs
     jnc     .done
-    dec     dword [ebp+16]          ; da--
-    add     eax, 4
+    dec     ebx
+    lea     edi, [edi+4]
     jg      .loop                   ; more?
 
 .done:
     lahf                            ; carry flag to AH
+    pop     ebx
     leave
     ret

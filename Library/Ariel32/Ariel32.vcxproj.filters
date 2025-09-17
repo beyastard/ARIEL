@@ -70,5 +70,20 @@
     <NASM Include="asm\xneg.asm">
       <Filter>Assembly Files</Filter>
     </NASM>
+    <NASM Include="asm\xmul.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xmulk.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xdigits.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xsig.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xdivk.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
   </ItemGroup>
 </Project>

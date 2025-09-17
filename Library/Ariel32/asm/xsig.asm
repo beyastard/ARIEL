@@ -10,28 +10,32 @@ default rel
 section .text align=8
 
 
-; void _xmovf(limb_t* a, limb_t* b, int32_t db);
-; Assumptions: d(a) = d(b) > 0
+; int32_t _xsig(limb_t* a, int32_t da); // high-order digit of a
+; Assumptions: d(a) > 0
+; Returns:     EAX = high order digit of a
+;              (a = 0 iff EAX = 0)
 ;
-global __xmovf
+global __xsig
 align 8
-__xmovf:
+__xsig:
     push    ebp
     mov     ebp, esp
     push    ebx
 
     mov     eax, [ebp+8]            ; EAX = a->limbs
-    mov     edx, [ebp+12]           ; EDX = b->limbs
-    mov     ebx, [ebp+16]           ; EBX = db
+    mov     edx, [ebp+12]           ; EDX = da
+
+    lea     ebx, [eax+edx*4-4]      ; ECX = &a_{d-1}
 
 .loop:
-    mov     ecx, [edx]              ; ECX = b_i
-    mov     [eax], ecx              ; a_i = b_i
-    lea     edx, [edx+4]
-    lea     eax, [eax+4]
-    dec     ebx
+    mov     eax, [ebx]
+    lea     ebx, [ebx-4]
+    cmp     eax, 0
+    jne     .done
+    dec     edx
     jg      .loop
 
+.done:
     pop     ebx
     leave
     ret

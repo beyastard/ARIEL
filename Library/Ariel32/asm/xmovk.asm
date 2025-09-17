@@ -29,16 +29,16 @@ __xmovk:
 
     mov     [eax], edx              ; move k into a->limbs
     dec     ecx
-    jz      .LmovkX
+    jz      .done
     sar     edx, 31
     and     edx, [Zsg]              ; EDX = sign bits
 
-.LmovkD:
+.loop:
     mov     [eax+4], edx            ; extend with sign
-    add     eax, 4
+    lea     eax, [eax+4]
     dec     ecx
-    jg      .LmovkD
+    jg      .loop
 
-.LmovkX:
+.done:
     leave
     ret
