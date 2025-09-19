@@ -20,30 +20,36 @@ align 8
 __xaddk:
     push    ebp
     mov     ebp, esp
+
+    push    ebx
+    push    esi
     push    edi
+    
+    mov     eax, [ebp+8]
+    mov     edx, [ebp+12]
+    mov     ebx, [ebp+16]
 
-    mov     edi, [ebp+8]            ; EDI = a->limbs
-    mov     edx, [ebp+12]           ; EDX = k
-    mov     ecx, [ebp+16]           ; ECX = da
+    mov     edi, eax                ; EDI = &a
+    mov     eax, [edi]
+    add     eax, edx
+    mov     [edi], eax              ; a_0 = a_0 + k
+    jnc     .LaddkX
+    dec     ebx                     ; EBX--
+    jz      .LaddkX                 ; only one digit
 
-    mov     eax, [edi]              ; EAX = a_0
-    add     eax, edx                ; EAX = a_0 + k
-    mov     [edi], eax
-    jnc     .done
-    dec     ecx
-    jz      .done                   ; only one digit
-
-.loop:
+.LaddkK:
     mov     eax, [edi+4]            ; a_i
     add     eax, 1
-    mov     [edi+4], eax            ; move into a->limbs
-    jnc     .done
-    dec     ecx
-    lea     edi, [edi+4]
-    jg      .loop                   ; more
+    mov     [edi+4], eax            ; move to a
+    jnc     .LaddkX
+    dec     ebx                     ; EBX--
+    lea     edi, [edi+4]            ; EDI++
+    jg      .LaddkK                 ; more
 
-.done:
-    lahf                            ; carry flag into AH
+.LaddkX:
+    lahf                            ; carry flag to AH
     pop     edi
+    pop     esi
+    pop     ebx
     leave
     ret

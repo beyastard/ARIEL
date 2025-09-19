@@ -18,26 +18,29 @@ align 8
 __xsubf:
     push    ebp
     mov     ebp, esp
-    push    ebx
-    push    edi
 
-    mov     eax, [ebp+8]            ; EAX = a->limbs
-    mov     edx, [ebp+12]           ; EDX = b->limbs
-    mov     ebx, [ebp+16]           ; EBX = da
+    push    ebx
+    push    esi
+    push    edi
     
+    mov     eax, [ebp+8]
+    mov     edx, [ebp+12]
+    mov     ebx, [ebp+16]
+
     clc                             ; clear carry
 
-.loop:
+.LsubfB:
     mov     edi, [edx]              ; EDI = b_i
     mov     ecx, [eax]              ; ECX = a_i
-    lea     edx, [edx+4]
+    lea     edx, [edx+4]            ; EDX++
     sbb     ecx, edi                ; ECX = a_i - b_i - borrow
-    dec     ebx
-    mov     [eax], ecx              ; move into a->limbs
-    lea     eax, [eax+4]
-    jg      .loop                   ; more digirs?
-    
+    dec     ebx                     ; EBX--
+    mov     [eax], ecx              ; move to a
+    lea     eax, [eax+4]            ; EAX++
+    jg      .LsubfB
+
     pop     edi
+    pop     esi
     pop     ebx
     leave
     ret

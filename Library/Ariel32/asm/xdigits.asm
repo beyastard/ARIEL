@@ -15,22 +15,29 @@ section .text align=8
 ; Returns:     EAX = number of significant digits of a 
 ;
 global __xdigits
-align 16
+align 8
 __xdigits:
     push    ebp
     mov     ebp, esp
 
-    mov     eax, [ebp+8]            ; EAX = da
-    mov     edx, [ebp+12]           ; EDX = a->limbs
+    push    ebx
+    push    esi
+    push    edi
+    
+    mov     eax, [ebp+8]
+    mov     edx, [ebp+12]
 
-.loop:
+.Ldig1:
     cmp     eax, 1
-    jbe     .done
+    jbe     .Ldig8
     cmp     dword [edx+eax*4-4], 0
-    jne     .done
+    jne     .Ldig8
     dec     eax
-    jmp     short .loop
+    jmp     short .Ldig1
 
-.done:
+.Ldig8:
+    pop     edi
+    pop     esi
+    pop     ebx
     leave
     ret

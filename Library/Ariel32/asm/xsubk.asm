@@ -20,31 +20,36 @@ align 8
 __xsubk:
     push    ebp
     mov     ebp, esp
+
     push    ebx
+    push    esi
+    push    edi
+    
+    mov     eax, [ebp+8]
+    mov     edx, [ebp+12]
+    mov     ebx, [ebp+16]
 
-    mov     eax, [ebp+8]            ; EAX = a->limbs
-    mov     edx, [ebp+12]           ; EDX = k
-    mov     ebx, [ebp+16]           ; EBX = da
-
-    mov     edi, eax                ; EDI = a->limbs
-    mov     eax, [edi]              ; EAX = a_0
-    sub     eax, edx                ; ECX = a_0 - k
-    mov     [edi], eax              ; move into a->limbs
-    jnc     .done
+    mov     edi, eax                ; EDI = &a
+    mov     eax, [edi]
+    sub     eax, edx
+    mov     [edi], eax              ; a_0 = a_0 - k
+    jnc     .LsubkX
     dec     ebx
-    jz      .done                   ; only one digit
+    jz      .LsubkX                 ; only one digit
 
-.loop:
-    mov     eax, [edi+4]            ; ECX = a_i
+.LsubkK:
+    mov     eax, [edi+4]            ; a_i
     sub     eax, 1
-    mov     [edi+4], eax            ; move into a->limbs
-    jnc     .done
-    dec     ebx
-    lea     edi, [edi+4]
-    jg      .loop                   ; more?
+    mov     [edi+4], eax            ; move to a
+    jnc     .LsubkX
+    dec     ebx                     ; EBX--
+    lea     edi, [edi+4]            ; EDI++
+    jg      .LsubkK                 ; more
 
-.done:
+.LsubkX:
     lahf                            ; carry flag to AH
+    pop     edi
+    pop     esi
     pop     ebx
     leave
     ret

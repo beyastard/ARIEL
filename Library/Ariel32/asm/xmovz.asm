@@ -17,19 +17,19 @@ align 8
 __xmovz:
     push    ebp
     mov     ebp, esp
-
-    mov     eax, [ebp+8]            ; EAX = a->limbs
-    mov     ecx, [ebp+12]           ; ECX = da
+    
+    mov     eax, [ebp+8]            ; EAX = &a
+    mov     ecx, [ebp+12]           ; ECX = d(a)
 
     test    ecx, ecx
-    jz      .done
+    jz      .Lmovz8
 
-.loop:
+.Lmovz2:
     mov     dword [eax], 0
     add     eax, 4
     dec     ecx
-    jg      .loop
+    jg      .Lmovz2
 
-.done:
+.Lmovz8:
     leave
     ret

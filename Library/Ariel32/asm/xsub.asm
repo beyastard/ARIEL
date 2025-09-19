@@ -21,49 +21,50 @@ section .text align=8
 global __xsub
 align 8
 __xsub:
-     mov     dword [Zsg], 0
+    mov     dword [Zsg], 0
 
     push    ebp
     mov     ebp, esp
+
     push    ebx
     push    esi
     push    edi
-
-    mov     edi, [ebp+8]            ; EDI = a->limbs
-    mov     edx, [ebp+12]           ; EDX = b->limbs
-    mov     ebx, [ebp+16]           ; EBX = da
-    mov     ecx, [ebp+20]           ; ECX = db
     
+    mov     eax, [ebp+8]
+    mov     edx, [ebp+12]
+    mov     ebx, [ebp+16]
+    mov     ecx, [ebp+20]
+
     mov     edi, eax                ; EDI = &a
     sub     ebx, ecx                ; EBX = d(a) - d(b)
     clc                             ; clear carry
 
-.loop_d:
+.LsubB:
     mov     esi, [edx]              ; ESI = b_i
     mov     eax, [edi]              ; EAX = a_i
-    lea     edx, [edx+4]
+    lea     edx, [edx+4]            ; EDX++
     sbb     eax, esi                ; EAX = a_i - b_i - borrow
-    dec     ecx
-    mov     [edi], eax              ; move to a->limbs
-    lea     edi, [edi+4]
-    jg      .loop_d                 ; more digits?
-    lahf                            ; carry flag into AH
+    dec     ecx                     ; ECX--
+    mov     [edi], eax              ; move to a
+    lea     edi, [edi+4]            ; EDI++
+    jg      .LsubB                  ; more digits
+    lahf                            ; carry flag to AH
     cmp     ebx, 0
-    jbe     .done                  ; d(a) = d(b)
+    jbe     .LsubX                  ; d(a) = d(b)
     sar     esi, 31
-    and     esi, [Zsg]              ; ESI = sign bits of b
-    sahf                            ; restore carry
+    and     esi, [Zsg]              ; ESI = b sign bits
+    sahf                            ; restore carry flag
 
-.loop_s:
+.LsubD:
     mov     eax, [edi]              ; EAX = a_i
-    sbb     eax, esi                ; EAX = a_i - sign bits of b - borrow
-    dec     ebx
-    mov     [edi], eax              ; move into a->limbs
-    lea     edi, [edi+4]
-    jg      .loop_s                 ; more sign bits?
-    lahf                            ; carry flag into AH
+    sbb     eax, esi                ; EAX = a_i - b sign bits - borrow
+    dec     ebx                     ; EBX--
+    mov     [edi], eax              ; move to a
+    lea     edi, [edi+4]            ; EDI++
+    jg      .LsubD                  ; more sign bits
+    lahf                            ; carry flag to AH
 
-.done:
+.LsubX:
     pop     edi
     pop     esi
     pop     ebx

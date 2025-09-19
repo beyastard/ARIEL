@@ -10,13 +10,12 @@ default rel
 section .text align=8
 
 
-; int32_t _xdivk(limb_t* a, int32_t k, int32_t da); // a = [a / k]  (k = 32-bit integer)
-; Assumptions: k > 0, d(a) > 0
-; Returns:     (a mod k) in EAX
+; void _xmodk(limb_t* a, int32_t k, int32_t da); // a = a * 2^(32*d)  (d = 32-bit integer)
+; Assumptions: 0 <= d < d(a), d(a) > 0
 ;
-global __xdivk
+global __xmodk
 align 8
-__xdivk:
+__xmodk:
     push    ebp
     mov     ebp, esp
 
@@ -29,17 +28,16 @@ __xdivk:
     mov     ebx, [ebp+16]
 
     lea     edi, [eax+ebx*4-4]      ; EDI = &a_{d-1}
-    mov     ecx, edx                ; EDX = k
+    mov     ecx, edx                ; ECX = k
     xor     edx, edx                ; EDX = 0
 
-.Ldivk2:
+.Lmodk2:
     mov     eax, [edi]              ; EAX = a_i
     div     ecx                     ; EAX = [(2^32*EDX + a_i)/k]
-    mov     [edi], eax              ; EDX = (2^32*EDX + a_i) mod k]
     sub     edi, 4
     dec     ebx
-    jg      .Ldivk2
-    mov     eax, edx                ; remainder
+    jg      .Lmodk2
+    mov     [edi+4], edx            ; remainder
 
     pop     edi
     pop     esi

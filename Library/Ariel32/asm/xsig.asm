@@ -20,22 +20,27 @@ align 8
 __xsig:
     push    ebp
     mov     ebp, esp
+
     push    ebx
+    push    esi
+    push    edi
+    
+    mov     eax, [ebp+8]
+    mov     edx, [ebp+12]
 
-    mov     eax, [ebp+8]            ; EAX = a->limbs
-    mov     edx, [ebp+12]           ; EDX = da
+    lea     ebx, [eax+edx*4-4]      ; EBX = &a_{d-1}
 
-    lea     ebx, [eax+edx*4-4]      ; ECX = &a_{d-1}
-
-.loop:
+.Lsig2:
     mov     eax, [ebx]
     lea     ebx, [ebx-4]
     cmp     eax, 0
-    jne     .done
+    jne     .Lsig8
     dec     edx
-    jg      .loop
+    jg      .Lsig2
 
-.done:
+.Lsig8:
+    pop     edi
+    pop     esi
     pop     ebx
     leave
     ret

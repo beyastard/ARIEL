@@ -14,32 +14,37 @@ section .text align=8
 ; Assumptions: d(a) > 0
 ;
 global __xneg
-align 16
+align 8
 __xneg:
     push    ebp
     mov     ebp, esp
-    push    ebx
 
-    mov     eax, [ebp+8]            ; EAX = a->limbs
-    mov     edx, [ebp+12]           ; EDX = da
+    push    ebx
+    push    esi
+    push    edi
+    
+    mov     eax, [ebp+8]
+    mov     edx, [ebp+12]
 
     mov     ebx, [eax]              ; EBX = a_0
-    not     ebx                     ; flip a_0 bits
+    not     ebx
     add     ebx, 1                  ; EBX = -a_0
-    dec     edx                     ; da--
-    mov     [eax], ecx              ; store into a->limbs[0]
-    jz      .done
+    dec     edx
+    mov     [eax], ebx
+    jz      .LnegX
 
-.loop:
+.LnegB:
     mov     ebx, [eax+4]            ; EBX = a_i
     not     ebx                     ; flip a_i bits
     adc     ebx, 0                  ; add carry
-    dec     edx                     ; da--
-    mov     [eax+4], ebx            ; store into a->limbs[i]
-    lea     eax, [eax+4]
-    jg      .loop                  ; more?
+    dec     edx
+    mov     [eax+4], ebx
+    lea     eax, [eax+4]            ; EAX++
+    jg      .LnegB
 
-.done:
+.LnegX:
+    pop     edi
+    pop     esi
     pop     ebx
     leave
     ret

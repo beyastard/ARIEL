@@ -18,26 +18,29 @@ align 8
 __xaddf:
     push    ebp
     mov     ebp, esp
-    push    ebx
-    push    edi
 
-    mov     eax, [ebp+8]            ; EAX = a->limbs
-    mov     edx, [ebp+12]           ; EDX = b->limbs
-    mov     ebx, [ebp+16]           ; EBX = db
+    push    ebx
+    push    esi
+    push    edi
+    
+    mov     eax, [ebp+8]
+    mov     edx, [ebp+12]
+    mov     ebx, [ebp+16]
 
     clc                             ; clear carry
 
-.loop:
+.LaddfB:
     mov     edi, [edx]              ; EDI = b_i
     mov     ecx, [eax]              ; ECX = a_i
-    lea     edx, [edx+4]
+    lea     edx, [edx+4]            ; EDX++
     adc     ecx, edi                ; ECX = a_i + b_i + carry
-    dec     ebx
-    mov     [eax], ecx              ; move into a->limbs
-    lea     eax, [eax+4]
-    jg      .loop                   ; more digits?
+    dec     ebx                     ; EBX--
+    mov     [eax], ecx              ; move to a
+    lea     eax, [eax+4]            ; EAX++
+    jg      .LaddfB                 ; more digits
 
     pop     edi
+    pop     esi
     pop     ebx
     leave
     ret

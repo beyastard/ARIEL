@@ -35,43 +35,43 @@ align 8
 __xmul:
     push    ebp
     mov     ebp, esp
+
     push    ebx
     push    esi
     push    edi
+    push    ebp
+    
+    mov     eax, [ebp+8]
+    mov     edx, [ebp+12]
+    mov     ebx, [ebp+16]
+    mov     ecx, [ebp+20]
 
-    mov     eax, [ebp+8]            ; EAX = a->limbs
-    mov     edx, [ebp+12]           ; EDX = b->limbs
-    mov     ebx, [ebp+16]           ; EBX = da
-    mov     ecx, [ebp+20]           ; ECX = db
+    mov     [Zmulda], ebx           ; d(a)
+    mov     [Zmulb0], edx           ; &b
+    mov     [Zmuldb], ecx           ; d(b)
 
-    mov     [Zmulb0], edx
-    mov     [Zmulda], ebx
-    mov     [Zmuldb], ecx
-
-    push    ebp                     ; used for carry
-
-    ; compute a_{d(a)-1} * b and move into a
-    lea     edi, [eax+ebx*4-4]      ; EDI = &a_{d(a)-1}
+    ; Compute a_{d(a)-1} * b and move into a
+    lea     edi, [eax+ebx*4-4]      ; EDI = &a{d(a)-1}
     mov     esi, edx                ; ESI = &b
     mov     ebx, [edi]              ; EBX = a_{d(a)-1}
     xor     ebp, ebp                ; EBP = carry
 
 .Lmuld:
-    mov     eax, [esi]              ; ESI = b_j
-    lea     esi, [esi+4]
+    mov     eax, [esi]              ; EAX = b_j
+    lea     esi, [esi+4]            ; ESI++
     mul     ebx                     ; EDX:EAX = a_{d(a)-1}*b_j
     add     eax, ebp                ; add carry
     mov     ebp, edx                ; save new carry
-    mov     [edi],eax               ; move product into a->limbs
+    mov     [edi], eax              ; move product into a
     adc     ebp, 0
-    lea     edi, [edi+4]
-    dec     ecx
+    lea     edi, [edi+4]            ; EDI++
+    dec     ecx                     ; ECX--
     jg      .Lmuld
     mov     [edi], ebp              ; final carry
     dec     dword [Zmulda]
     jz      .Lmulx
 
-    ; compute a_i * b and accumulate into a
+    ; Compute a_i * b and accumulate into a
 .Lmulh:
     mov     ecx, [Zmuldb]           ; ECX = d(b)
     xor     ebp, ebp                ; EBP = carry
@@ -81,10 +81,10 @@ __xmul:
     mov     ebx, [edi]              ; EBX = a_i
     mov     dword [edi], 0          ; new a_i = 0
 
-    ; compute a_i * b_j and add to a_{i+j}
+    ; Compute a_i * b_j and add to a_{i+j}
 .Lmulk:
     mov     eax, [esi]              ; EAX = b_j
-    lea     esi, [esi+4]
+    lea     esi, [esi+4]            ; ESI++
     mul     ebx                     ; EDX:EAX = a_i * b_j
     add     eax, ebp                ; add carry
     mov     ebp, edx                ; save new carry
@@ -93,14 +93,14 @@ __xmul:
     add     eax, edx                ; EAX = a_i*b_j + a_{i+j}
     adc     ebp, 0
     mov     [edi], eax              ; new a_{i+j}
-    lea     edi, [edi+4]
-    dec     ecx
+    lea     edi, [edi+4]            ; EDI++
+    dec     ecx                     ; ECX--
     jg      .Lmulk
     add     [edi], ebp              ; add final carry
     adc     dword [edi+4], 0
     jc      .Lmulp
 
-    ; next a_i
+    ; Next a_i
 .Lmulq:
     dec     dword [Zmulda]
     jg      .Lmulh
@@ -115,9 +115,13 @@ __xmul:
 
 .Lmulp:
     lea     eax, [edi+8]
-
-.Lmuls:
-    add     dword [eax], 1          ; add one and propagate carry
-    add     eax, 4
-    jc      .Lmuls
+    call    _xcar
     jmp     short .Lmulq
+
+align 8
+_xcar:
+.loop:
+    add     dword [eax], 1
+    lea     eax, [eax+4]
+    jc      .loop
+    ret

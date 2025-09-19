@@ -23,7 +23,9 @@ __xmov:
 
     push    ebp
     mov     ebp, esp
+
     push    ebx
+    push    esi
     push    edi
     
     mov     eax, [ebp+8]
@@ -31,28 +33,29 @@ __xmov:
     mov     ebx, [ebp+16]
     mov     ecx, [ebp+20]
 
-    sub     ebx, ecx                ; ECX = d(a) - d(b)
+    sub     ebx, ecx                ; EBX = d(a) - d(b)
 
-.loop:
+.LmovB:
     mov     edi, [edx]              ; EDI = b_i
-    lea     edx, [edx+4]
-    mov     [eax], edi              ; move into a->limbs
-    dec     ecx                     ; db--
-    lea     eax, [eax+4]
-    jg      .loop                   ; more digits?
+    lea     edx, [edx+4]            ; EDX++
+    mov     [eax], edi              ; move to a
+    dec     ecx                     ; ECX--
+    lea     eax, [eax+4]            ; EAX++
+    jg      .LmovB                  ; more digits
     cmp     ebx, 0
-    jbe     .done                   ; d(a) = d(b)
+    jbe     .LmovX                  ; d(a) = d(b)
     sar     edi, 31
-    and     edi, [Zsg]              ; EDI = sign bits of b
+    and     edi, [Zsg]              ; EDI = b sign bits
 
-.loop_sign:
-    mov     dword [eax], 0          ; extend with sign bits
-    dec     ebx
-    lea     eax, [eax+4]
-    jg      .loop_sign              ; more digits?
+.LmovD:
+    mov     dword [eax], 0          ; extend with zero
+    dec     ebx                     ; EBX--
+    lea     eax, [eax+4]            ; EAX++
+    jg      .LmovD                  ; more digits
 
-.done:
+.LmovX:
     pop     edi
+    pop     esi
     pop     ebx
     leave
     ret

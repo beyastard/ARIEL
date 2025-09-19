@@ -22,23 +22,29 @@ __xmovk:
     push    ebp
     mov     ebp, esp
 
-    mov     dword [Zsg], 0
-    mov     eax, [ebp+8]            ; EAX = a->limbs
-    mov     edx, [ebp+12]           ; EDX = k
-    mov     ecx, [ebp+16]           ; ECX = da
+    push    ebx
+    push    esi
+    push    edi
+    
+    mov     eax, [ebp+8]
+    mov     edx, [ebp+12]
+    mov     ebx, [ebp+16]
 
-    mov     [eax], edx              ; move k into a->limbs
-    dec     ecx
-    jz      .done
+    mov     [eax], edx              ; move k to a
+    dec     ebx                     ; EBX--
+    jz      .LmovkX
     sar     edx, 31
-    and     edx, [Zsg]              ; EDX = sign bits
+    and     edx, [Zsg]              ; EDX = s sign bits
 
-.loop:
+.LmovkD:
     mov     [eax+4], edx            ; extend with sign
-    lea     eax, [eax+4]
-    dec     ecx
-    jg      .loop
+    lea     eax, [eax+4]            ; EAX++
+    dec     ebx                     ; EBX--
+    jg      .LmovkD
 
-.done:
+.LmovkX:
+    pop     edi
+    pop     esi
+    pop     ebx
     leave
     ret

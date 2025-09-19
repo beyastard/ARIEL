@@ -10,14 +10,27 @@
 #include "ariel32_base.h"
 
 
+// remainder register
 extern arz_t* res;
+extern int32_t kres;
 
+// temporary registers
+extern arz_t* temp1;
+extern arz_t* temp2;
+extern arz_t* temp3;
+extern arz_t* temp4;
+extern arz_t* temp5;
+
+// useful constants
+extern double dlog2;
+extern double dlog10;
 
 void invalid_parameter(const char* c);
 void arz_fdisplay(FILE* fp, arz_t* a);
 #define arz_display(areg) arz_fdisplay(NULL, areg)
 
 void arz_mov(arz_t* a, arz_t* b);
+void arz_movd(arz_t* a, const char* digits);
 void arz_movk(arz_t* a, int32_t k);
 
 void arz_add(arz_t* a, arz_t* b);
@@ -26,9 +39,29 @@ void arz_addk(arz_t* a, int32_t k);
 void arz_sub(arz_t* a, arz_t* b);
 
 int32_t arz_sgn(arz_t* a);
+int32_t arz_cmp(arz_t* a, arz_t* b);
+int32_t arz_cmpk(arz_t* a, int32_t k);
 
+void arz_squ(arz_t* a);
 void arz_mul(arz_t* a, arz_t* b);
 void arz_mulk(arz_t* a, int32_t k);
+void arz_mul2k(arz_t* a, int32_t k);
+
+void arz_div(arz_t* a, arz_t* b);
+void arz_divk(arz_t* a, int32_t k);
+void arz_div2k(arz_t* a, int32_t k);
+
+void arz_mod(arz_t* a, arz_t* b);
+void arz_modk(arz_t* a, int32_t k);
+void arz_mod2k(arz_t* a, int32_t k);
+
+void arz_exp(arz_t* a, arz_t* b, arz_t* c);
+
+double arz_log(arz_t* a);
+void arz_sqrt(arz_t* a, arz_t* b);
+
+int32_t arz_len(arz_t* a);
+int32_t arz_bit(arz_t* a, int32_t k);
 
 
 // maco-level functions

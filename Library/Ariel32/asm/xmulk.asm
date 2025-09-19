@@ -18,29 +18,30 @@ align 8
 __xmulk:
     push    ebp
     mov     ebp, esp
+
     push    ebx
     push    esi
     push    edi
-
-    mov     esi, [ebp+8]            ; ESI = a->limbs
-    mov     ecx, [ebp+12]           ; ECX = k
-    mov     ebx, [ebp+16]           ; da
     
-    mov     esi, eax                ; ESI = a->limbs
-    mov     ecx, edx                ; ECX = k
-    xor     edi, edi                ; EDI = carry
+    mov     eax, [ebp+8]
+    mov     edx, [ebp+12]
+    mov     ebx, [ebp+16]
 
-.loop:
+    mov     esi, eax                ; ESI = &a
+    mov     ecx, edx                ; ECX = k
+    xor     edi, edi
+
+.Lmulk2:
     mov     eax, [esi]              ; EAX = a_i
     mul     ecx                     ; multiply by k
     add     eax, edi                ; add carry
     adc     edx, 0
     mov     edi, edx                ; save carry
-    mov     [esi], eax              ; move into a->limbs
-    lea     esi, [esi+4]
-    dec     ebx
-    jg      .loop
-    mov     [esi], edx              ; final high-order digit
+    mov     [esi], eax
+    lea     esi, [esi+4]            ; ESI++
+    dec     ebx                     ; EBX--
+    jg      .Lmulk2
+    mov     [esi], edx              ; final high order digit
 
     pop     edi
     pop     esi

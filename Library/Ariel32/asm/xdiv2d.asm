@@ -10,12 +10,12 @@ default rel
 section .text align=8
 
 
-; void _xmovf(limb_t* a, limb_t* b, int32_t db);
-; Assumptions: d(a) = d(b) > 0
+; void _xdiv2d(limb_t* a, int32_t d, int32_t da); // a = a * 2^(32*d)  (d = 32-bit integer)
+; Assumptions: 0 <= d < d(a), d(a) > 0
 ;
-global __xmovf
+global __xdiv2d
 align 8
-__xmovf:
+__xdiv2d:
     push    ebp
     mov     ebp, esp
 
@@ -27,14 +27,18 @@ __xmovf:
     mov     edx, [ebp+12]
     mov     ebx, [ebp+16]
 
-.LmovfB:
-    mov     ecx, [edx]              ; ECX = b_i
-    lea     edx, [edx+4]            ; EDX++
-    mov     [eax], ecx              ; a_i = b_i
-    lea     eax, [eax+4]            ; EAX++
-    dec     ebx                     ; EBX--
-    jg      .LmovfB
+    cmp     edx, 0
+    jle     .Ldiv2d8                ; d = 0: nothing to do
+    sub     ebx, edx                ; EBX = d(a) - d
 
+.Ldiv2d4:
+    mov     ecx, [eax+edx*4]        ; EAX = &a, ECX = a_i
+    mov     [eax], ecx              ; divide by 2^(32*d)
+    dec     ebx
+    lea     eax, [eax+4]
+    jg      .Ldiv2d4
+
+.Ldiv2d8:
     pop     edi
     pop     esi
     pop     ebx

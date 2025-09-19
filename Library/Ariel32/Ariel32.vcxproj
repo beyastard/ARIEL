@@ -163,8 +163,29 @@
     </NASM>
     <NASM Include="asm\xaddf.asm" />
     <NASM Include="asm\xaddk.asm" />
+    <NASM Include="asm\xcmp.asm">
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./asm;%(IncludePaths)</IncludePaths>
+    </NASM>
     <NASM Include="asm\xdigits.asm" />
+    <NASM Include="asm\xdiv.asm">
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./asm;%(IncludePaths)</IncludePaths>
+    </NASM>
+    <NASM Include="asm\xdiv2d.asm" />
+    <NASM Include="asm\xdiv2k.asm" />
     <NASM Include="asm\xdivk.asm" />
+    <NASM Include="asm\xmod.asm">
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./asm;%(IncludePaths)</IncludePaths>
+    </NASM>
+    <NASM Include="asm\xmodk.asm" />
     <NASM Include="asm\xmov.asm">
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">./asm;%(IncludePaths)</IncludePaths>
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">./asm;%(IncludePaths)</IncludePaths>
@@ -185,9 +206,19 @@
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./asm;%(IncludePaths)</IncludePaths>
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./asm;%(IncludePaths)</IncludePaths>
     </NASM>
+    <NASM Include="asm\xmul2d.asm" />
+    <NASM Include="asm\xmul2k.asm" />
     <NASM Include="asm\xmulk.asm" />
     <NASM Include="asm\xneg.asm" />
+    <NASM Include="asm\xnext_prime.asm" />
+    <NASM Include="asm\xsep2k.asm" />
     <NASM Include="asm\xsig.asm" />
+    <NASM Include="asm\xsqu.asm">
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./asm;%(IncludePaths)</IncludePaths>
+      <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|x64'">./asm;%(IncludePaths)</IncludePaths>
+    </NASM>
     <NASM Include="asm\xsub.asm">
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">./asm;%(IncludePaths)</IncludePaths>
       <IncludePaths Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">./asm;%(IncludePaths)</IncludePaths>

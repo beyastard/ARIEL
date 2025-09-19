@@ -85,5 +85,38 @@
     <NASM Include="asm\xdivk.asm">
       <Filter>Assembly Files</Filter>
     </NASM>
+    <NASM Include="asm\xsqu.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xmul2k.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xcmp.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xmul2d.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xdiv.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xdiv2k.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xdiv2d.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xmod.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xmodk.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xsep2k.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
+    <NASM Include="asm\xnext_prime.asm">
+      <Filter>Assembly Files</Filter>
+    </NASM>
   </ItemGroup>
 </Project>
