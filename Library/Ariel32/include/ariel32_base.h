@@ -57,7 +57,7 @@ int xprintf(const char* s, ...);
 // terminate program
 inline void terminate(void)
 {
-    xprintf("Sorry, cannot continue... Press 'X' to exit.\n");
+    printf("Sorry, cannot continue... Press 'X' to exit.\n");
 
     while (true)
     {

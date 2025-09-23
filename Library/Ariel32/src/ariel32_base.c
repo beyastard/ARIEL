@@ -51,7 +51,7 @@ void _ualloc(arz_t* a, int32_t c, int32_t d)
         _xmovz(a->limbs, a->used_limbs);
     else
     {
-        xprintf("Unable to allocate %d digits in function _ualloc!\n", a->alloc_limbs);
+        printf("Unable to allocate %d digits in function _ualloc!\n", a->alloc_limbs);
         terminate();
     }
 }
@@ -86,7 +86,7 @@ void _uextend(arz_t* a, int32_t d)
     }
     else
     {
-        xprintf("Unable to allocate %d extra digits in _uextend!\n", d - a->alloc_limbs);
+        printf("Unable to allocate %d extra digits in _uextend!\n", d - a->alloc_limbs);
         terminate();
     }
 }
@@ -125,12 +125,12 @@ void _usep2k(arz_t* a, arz_t* b, int32_t k)
 // Unformatted print of an ARIEL integer register
 void _udump(arz_t* a)
 {
-    xprintf("c=%d d=%d f=%d &v=%p v=", a->alloc_limbs, a->used_limbs, a->flags, a->limbs);
+    printf("c=%d d=%d f=%d &v=%p v=", a->alloc_limbs, a->used_limbs, a->flags, a->limbs);
 
     for (int32_t i = 0; i < a->used_limbs; i++)
-        xprintf("%d ", a->limbs[i]);
+        printf("%d ", a->limbs[i]);
 
-    xprintf("\n");
+    printf("\n");
 }
 
 int xfprintf(FILE* fp, const char* s, ...)

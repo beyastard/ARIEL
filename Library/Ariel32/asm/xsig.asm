@@ -22,8 +22,6 @@ __xsig:
     mov     ebp, esp
 
     push    ebx
-    push    esi
-    push    edi
     
     mov     eax, [ebp+8]
     mov     edx, [ebp+12]
@@ -39,8 +37,6 @@ __xsig:
     jg      .Lsig2
 
 .Lsig8:
-    pop     edi
-    pop     esi
     pop     ebx
     leave
     ret

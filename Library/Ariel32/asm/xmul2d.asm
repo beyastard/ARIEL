@@ -20,8 +20,6 @@ __xmul2d:
     mov     ebp, esp
 
     push    ebx
-    push    esi
-    push    edi
     
     mov     eax, [ebp+8]
     mov     edx, [ebp+12]
@@ -47,8 +45,6 @@ __xmul2d:
     jg      .Lmovz2a
 
 .Lmul2d8:
-    pop     edi
-    pop     esi
     pop     ebx
     leave
     ret

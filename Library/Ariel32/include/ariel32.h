@@ -56,6 +56,11 @@ void arz_modk(arz_t* a, int32_t k);
 void arz_mod2k(arz_t* a, int32_t k);
 
 void arz_exp(arz_t* a, arz_t* b, arz_t* c);
+void arz_expmod(arz_t* a, arz_t* b, arz_t* c, arz_t* q);
+void arz_expmodm2ke(arz_t* a, arz_t* b, arz_t* c, arz_t* q, int32_t m, int32_t k, arz_t* e);
+
+void arz_gcd(arz_t* a, arz_t* b);
+void arz_gcdext(arz_t* u, arz_t* d, arz_t* a, arz_t* b);
 
 double arz_log(arz_t* a);
 void arz_sqrt(arz_t* a, arz_t* b);

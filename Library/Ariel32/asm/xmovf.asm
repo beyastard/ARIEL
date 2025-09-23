@@ -20,8 +20,6 @@ __xmovf:
     mov     ebp, esp
 
     push    ebx
-    push    esi
-    push    edi
     
     mov     eax, [ebp+8]
     mov     edx, [ebp+12]
@@ -35,8 +33,6 @@ __xmovf:
     dec     ebx                     ; EBX--
     jg      .LmovfB
 
-    pop     edi
-    pop     esi
     pop     ebx
     leave
     ret

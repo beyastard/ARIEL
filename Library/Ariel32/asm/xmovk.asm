@@ -23,8 +23,6 @@ __xmovk:
     mov     ebp, esp
 
     push    ebx
-    push    esi
-    push    edi
     
     mov     eax, [ebp+8]
     mov     edx, [ebp+12]
@@ -43,8 +41,6 @@ __xmovk:
     jg      .LmovkD
 
 .LmovkX:
-    pop     edi
-    pop     esi
     pop     ebx
     leave
     ret

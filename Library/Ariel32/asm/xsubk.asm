@@ -22,7 +22,6 @@ __xsubk:
     mov     ebp, esp
 
     push    ebx
-    push    esi
     push    edi
     
     mov     eax, [ebp+8]
@@ -49,7 +48,6 @@ __xsubk:
 .LsubkX:
     lahf                            ; carry flag to AH
     pop     edi
-    pop     esi
     pop     ebx
     leave
     ret

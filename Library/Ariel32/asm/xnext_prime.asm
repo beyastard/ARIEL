@@ -22,8 +22,6 @@ __xnext_prime:
     mov     ebp, esp
 
     push    ebx
-    push    esi
-    push    edi
     
     mov     eax, [ebp+8]
 
@@ -61,8 +59,6 @@ __xnext_prime:
     mov     eax, 3
 
 .LnxtpZ:
-    pop     edi
-    pop     esi
     pop     ebx
     leave
     ret

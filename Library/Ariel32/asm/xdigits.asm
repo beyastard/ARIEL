@@ -19,10 +19,6 @@ align 8
 __xdigits:
     push    ebp
     mov     ebp, esp
-
-    push    ebx
-    push    esi
-    push    edi
     
     mov     eax, [ebp+8]
     mov     edx, [ebp+12]
@@ -36,8 +32,5 @@ __xdigits:
     jmp     short .Ldig1
 
 .Ldig8:
-    pop     edi
-    pop     esi
-    pop     ebx
     leave
     ret

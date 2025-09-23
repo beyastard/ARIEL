@@ -36,7 +36,7 @@ extern double dlog10 = 2.30258509299404568401799145468436420757;
 // print message and exit
 void invalid_parameter(const char* c)
 {
-    xprintf("Invalid parameter in %s call\n", c);
+    printf("Invalid parameter in %s call\n", c);
     terminate();
 }
 
@@ -926,7 +926,202 @@ void arz_exp(arz_t* a, arz_t* b, arz_t* c)
     }
 }
 
-// Return max{log(|a|), 0}.
+// a = (b^c mod q)
+// assumes b, c >= 0, q > 0
+void arz_expmod(arz_t* a, arz_t* b, arz_t* c, arz_t* q)
+{
+    if (b->limbs == NULL)
+        invalid_parameter("arz_expmod");
+
+    if (c->limbs == NULL)
+        invalid_parameter("arz_expmod");
+
+    if (b->used_limbs < 1)
+        invalid_parameter("arz_expmod");
+
+    if (c->used_limbs < 1)
+        invalid_parameter("arz_expmod");
+
+    assert(c->limbs != NULL);
+
+    arz_movk(a, 1);
+
+    if (arz_sgn(c) <= 0)
+        return;
+
+    int32_t f = 0;
+    for (int32_t i = c->used_limbs - 1; i >= 0; i--)
+    {
+        for (uint32_t j = 0x80000000; j >= 1; j >>= 1)
+        {
+            if (f)
+            {
+                arz_squ(a);
+                arz_mod(a, q);
+            }
+
+            if (c->limbs[i] & j)
+            {
+                arz_mul(a, b);
+                arz_mod(a, q);
+                f++;
+            }
+        }
+    }
+}
+
+// a = (b^c mod q), where q = m*2^k + e
+// assumes b, c >= 0, q = m*2^k + e > 0
+void arz_expmodm2ke(arz_t* a, arz_t* b, arz_t* c, arz_t* q, int32_t m, int32_t k, arz_t* e)
+{
+    if (b->limbs == NULL)
+        invalid_parameter("arz_expmodm2ke");
+
+    if (c->limbs == NULL)
+        invalid_parameter("arz_expmodm2ke");
+
+    if (q->limbs == NULL)
+        invalid_parameter("arz_expmodm2ke");
+
+    if (b->used_limbs < 1)
+        invalid_parameter("arz_expmodm2ke");
+
+    if (c->used_limbs < 1)
+        invalid_parameter("arz_expmodm2ke");
+
+    if (q->used_limbs < 1)
+        invalid_parameter("arz_expmodm2ke");
+
+    if (arz_sgn(q) <= 0)
+        invalid_parameter("arz_expmodm2ke");
+
+    arz_movk(a, 1);
+
+    if (arz_sgn(c) <= 0)
+        return;
+
+    int32_t f = 0;
+    for (int32_t i = c->used_limbs - 1; i >= 0; i--)
+    {
+        for (uint32_t j = 0x80000000; j >= 1; j >>= 1)
+        {
+            if (f)
+            {
+                arz_squ(a);
+                _usep2k(a, res, k);   // a = a_0, res = a_1
+                arz_divk(res, m);     // res = a_11, kres = a_10
+                arz_mul(res, e);      // res = e*a_11
+                arz_sub(a, res);
+                arz_movk(res, kres);
+                arz_mul2k(res, k);    // res = a_10*2^k
+                arz_add(a, res);
+            }
+
+            if (c->limbs[i] & j)
+            {
+                arz_mul(a, b);
+                _usep2k(a, res, k);   // a = a_0, res = a_1
+                arz_divk(res, m);     // res = a_11, kres = a_10
+                arz_mul(res, e);      // res = e*a_11
+                arz_sub(a, res);
+                arz_movk(res, kres);
+                arz_mul2k(res, k);    // res = a_10*2^k
+                arz_add(a, res);
+
+                f++;
+            }
+
+            _utrim(a);
+            if (a->used_limbs > q->used_limbs + 8)
+                arz_mod(a, q);
+        }
+    }
+
+    arz_mod(a, q);
+}
+
+// a = arz_gcd(a, b)  (b is destroyed in the process)
+void arz_gcd(arz_t* a, arz_t* b)
+{
+    if (a->limbs == NULL)
+        invalid_parameter("arz_gcd");
+
+    if (b->limbs == NULL)
+        invalid_parameter("arz_gcd");
+
+    if (a->used_limbs < 1)
+        invalid_parameter("arz_gcd");
+
+    if (b->used_limbs < 1)
+        invalid_parameter("arz_gcd");
+
+    if (arz_sgn(a) < 0)
+        arz_neg(a);
+
+    int32_t sb = arz_sgn(b);
+
+    if (sb < 0)
+        arz_neg(b);
+
+    while (sb)
+    {
+        arz_mod(a, b);
+
+        if (!_usig(a))
+        {
+            arz_mov(a, b);
+            return;
+        }
+
+        arz_mod(b, a);
+
+        if (!_usig(b))
+            return;
+    }
+}
+
+// return u, d, where a*u = d (mod b), d = gcd(a, b)
+void arz_gcdext(arz_t* u, arz_t* d, arz_t* a, arz_t* b)
+{
+    if (a->limbs == NULL)
+        invalid_parameter("arz_gcdext");
+
+    if (b->limbs == NULL)
+        invalid_parameter("arz_gcdext");
+
+    if (a->used_limbs < 1)
+        invalid_parameter("arz_gcdext");
+
+    if (b->used_limbs < 1)
+        invalid_parameter("arz_gcdext");
+
+    if (arz_sgn(b) <= 0)
+        invalid_parameter("arz_gcdext");
+
+    arz_mov(d, a);
+    arz_mod(d, b);
+    arz_movk(u, 1);
+    arz_movk(temp1, 0);
+    arz_mov(temp2, b);
+
+    while (_usig(temp2))
+    {
+        arz_mov(temp5, d);
+        arz_div(temp5, temp2);
+        arz_mov(temp4, res);
+        arz_mul(temp5, temp1);
+        arz_mov(temp3, u);
+        arz_sub(temp3, temp5);
+        arz_mov(u, temp1);
+        arz_mov(d, temp2);
+        arz_mov(temp1, temp3);
+        arz_mov(temp2, temp4);
+    }
+    
+    arz_mod(u, b);
+}
+
+// return max{log(|a|), 0}.
 double arz_log(arz_t* a)
 {
     if (a->limbs == NULL)

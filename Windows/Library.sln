@@ -5,6 +5,10 @@ VisualStudioVersion = 17.14.36429.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ariel32", "..\Library\Ariel32\Ariel32.vcxproj", "{70E4496B-495B-4547-BE2E-6221B89DEC6F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ariel32Lib_Test01", "..\Library\Ariel32Lib_Test01\Ariel32Lib_Test01.vcxproj", "{59998FD8-1EA3-4E39-B8E3-6F93C7BE1ABA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ariel32Lib_Test02", "..\Library\Ariel32Lib_Test02\Ariel32Lib_Test02.vcxproj", "{45BB2001-76C9-4757-974C-4D1BE3FA197A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +25,22 @@ Global
 		{70E4496B-495B-4547-BE2E-6221B89DEC6F}.Release|x64.Build.0 = Release|x64
 		{70E4496B-495B-4547-BE2E-6221B89DEC6F}.Release|x86.ActiveCfg = Release|Win32
 		{70E4496B-495B-4547-BE2E-6221B89DEC6F}.Release|x86.Build.0 = Release|Win32
+		{59998FD8-1EA3-4E39-B8E3-6F93C7BE1ABA}.Debug|x64.ActiveCfg = Debug|x64
+		{59998FD8-1EA3-4E39-B8E3-6F93C7BE1ABA}.Debug|x64.Build.0 = Debug|x64
+		{59998FD8-1EA3-4E39-B8E3-6F93C7BE1ABA}.Debug|x86.ActiveCfg = Debug|Win32
+		{59998FD8-1EA3-4E39-B8E3-6F93C7BE1ABA}.Debug|x86.Build.0 = Debug|Win32
+		{59998FD8-1EA3-4E39-B8E3-6F93C7BE1ABA}.Release|x64.ActiveCfg = Release|x64
+		{59998FD8-1EA3-4E39-B8E3-6F93C7BE1ABA}.Release|x64.Build.0 = Release|x64
+		{59998FD8-1EA3-4E39-B8E3-6F93C7BE1ABA}.Release|x86.ActiveCfg = Release|Win32
+		{59998FD8-1EA3-4E39-B8E3-6F93C7BE1ABA}.Release|x86.Build.0 = Release|Win32
+		{45BB2001-76C9-4757-974C-4D1BE3FA197A}.Debug|x64.ActiveCfg = Debug|x64
+		{45BB2001-76C9-4757-974C-4D1BE3FA197A}.Debug|x64.Build.0 = Debug|x64
+		{45BB2001-76C9-4757-974C-4D1BE3FA197A}.Debug|x86.ActiveCfg = Debug|Win32
+		{45BB2001-76C9-4757-974C-4D1BE3FA197A}.Debug|x86.Build.0 = Debug|Win32
+		{45BB2001-76C9-4757-974C-4D1BE3FA197A}.Release|x64.ActiveCfg = Release|x64
+		{45BB2001-76C9-4757-974C-4D1BE3FA197A}.Release|x64.Build.0 = Release|x64
+		{45BB2001-76C9-4757-974C-4D1BE3FA197A}.Release|x86.ActiveCfg = Release|Win32
+		{45BB2001-76C9-4757-974C-4D1BE3FA197A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

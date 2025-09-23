@@ -20,8 +20,6 @@ __xneg:
     mov     ebp, esp
 
     push    ebx
-    push    esi
-    push    edi
     
     mov     eax, [ebp+8]
     mov     edx, [ebp+12]
@@ -43,8 +41,6 @@ __xneg:
     jg      .LnegB
 
 .LnegX:
-    pop     edi
-    pop     esi
     pop     ebx
     leave
     ret

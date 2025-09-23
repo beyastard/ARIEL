@@ -24,12 +24,30 @@
     <ClCompile Include="src\ariel32_base.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ariel32_prime.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ariel32_test.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ariel32_evaluate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ariel32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ariel32_base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ariel32_prime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ariel32_test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ariel32_evaluate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

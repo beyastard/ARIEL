@@ -20,7 +20,6 @@ __xmodk:
     mov     ebp, esp
 
     push    ebx
-    push    esi
     push    edi
     
     mov     eax, [ebp+8]
@@ -40,7 +39,6 @@ __xmodk:
     mov     [edi+4], edx            ; remainder
 
     pop     edi
-    pop     esi
     pop     ebx
     leave
     ret

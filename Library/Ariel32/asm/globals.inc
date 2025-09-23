@@ -7,7 +7,7 @@
 ; Note that the code is not currently optimized.
 ; Copyright 2025, Bryan K Reinhart
 
-section .data   align=16
+section .data   align=8
 
 
 Zsg         dd      0               ; sign indicator

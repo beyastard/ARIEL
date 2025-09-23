@@ -21,7 +21,6 @@ __xdivk:
     mov     ebp, esp
 
     push    ebx
-    push    esi
     push    edi
     
     mov     eax, [ebp+8]
@@ -42,7 +41,6 @@ __xdivk:
     mov     eax, edx                ; remainder
 
     pop     edi
-    pop     esi
     pop     ebx
     leave
     ret

@@ -20,8 +20,6 @@ __xdiv2d:
     mov     ebp, esp
 
     push    ebx
-    push    esi
-    push    edi
     
     mov     eax, [ebp+8]
     mov     edx, [ebp+12]
@@ -39,8 +37,6 @@ __xdiv2d:
     jg      .Ldiv2d4
 
 .Ldiv2d8:
-    pop     edi
-    pop     esi
     pop     ebx
     leave
     ret

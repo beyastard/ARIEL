@@ -148,10 +148,16 @@
   <ItemGroup>
     <ClCompile Include="src\ariel32.c" />
     <ClCompile Include="src\ariel32_base.c" />
+    <ClCompile Include="src\ariel32_evaluate.c" />
+    <ClCompile Include="src\ariel32_prime.c" />
+    <ClCompile Include="src\ariel32_test.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ariel32.h" />
     <ClInclude Include="include\ariel32_base.h" />
+    <ClInclude Include="include\ariel32_evaluate.h" />
+    <ClInclude Include="include\ariel32_prime.h" />
+    <ClInclude Include="include\ariel32_test.h" />
   </ItemGroup>
   <ItemGroup>
     <NASM Include="asm\globals.inc" />

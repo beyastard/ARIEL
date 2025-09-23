@@ -25,7 +25,6 @@ __xmov:
     mov     ebp, esp
 
     push    ebx
-    push    esi
     push    edi
     
     mov     eax, [ebp+8]
@@ -55,7 +54,6 @@ __xmov:
 
 .LmovX:
     pop     edi
-    pop     esi
     pop     ebx
     leave
     ret
